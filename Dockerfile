@@ -26,10 +26,13 @@ ENV NODE=/usr/local/bin/node
 ENV NPM=/usr/local/bin/npm
 ENV PYTHON=/usr/bin/python2.7
 
+ADD smartthings-nodeproxy /stnp
+RUN mkdir -p /stnp/plugins
 RUN apt-get install python2.7 build-essential libpcap-dev wget \
- && mkdir -p /stnp/plugins \
- && wget -O - https://github.com/${repo}/smartthings/tarball/${branch} \
-  | tar -xzvf - --wildcards --strip-components=2 -C /stnp/ ${repo}-smartthings-*/smartthings-nodeproxy/ \
+ cec-utils libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin \
+#  && mkdir -p /stnp/plugins \
+#  && wget -O - https://github.com/${repo}/smartthings/tarball/${branch} \
+#   | tar -xzvf - --wildcards --strip-components=2 -C /stnp/ ${repo}-smartthings-*/smartthings-nodeproxy/ \
  && cd /stnp \
  && rm -f restart.me smartthings-nodeproxy.service config.json \
  && npm install \
@@ -44,5 +47,8 @@ COPY config.sample /stnp/config.json
 
 EXPOSE 8080
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# ENTRYPOINT ["/docker-entrypoint.sh"]
+
+RUN apt-get install cec-utils libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin
+CMD /bin/bash
 
