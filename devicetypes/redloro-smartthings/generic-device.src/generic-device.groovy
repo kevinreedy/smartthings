@@ -32,6 +32,7 @@ metadata {
      * of the capability, for example, refresh would be "refresh.refresh"
      */
     command "button1"
+    command "button2"
   }
 
   /**
@@ -57,7 +58,10 @@ metadata {
 
     // Row 1
     standardTile("button1", "button1", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
-      state "default", action:"button1", icon:"st.Entertainment.entertainment15", backgroundColor:"#ffffff"
+      state "default", action:"button1", icon:"st.Entertainment.entertainment13", backgroundColor:"#2ecc40"
+    }
+    standardTile("button2", "button2", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"button2", icon:"st.Entertainment.entertainment13", backgroundColor:"#ff4136"
     }
     standardTile("refresh", "device.status", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
       state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh", backgroundColor:"#ffffff"
@@ -69,7 +73,7 @@ metadata {
     // Defines which tile(s) to show when user opens the detailed view
     details([
       "state",
-      "button1","refresh"
+      "button1","button2","refresh"
     ])
   }
 }
@@ -85,8 +89,12 @@ metadata {
  */
 def refresh() {}
 def button1() {
-  def random = (1..10).inject("") { a, b -> a += ('a'..'z')[new Random().nextFloat() * 26 as int] }
-  sendCommand("/button1/${random}")
+  log.debug "button1()"
+  sendCommand("/button1/on")
+}
+def button2() {
+  log.debug "button2()"
+  sendCommand("/button1/off")
 }
 /**************************************************************************/
 
@@ -102,6 +110,7 @@ def update(evt) {
   if (evt.containsKey("command")) {
     //toggle the switch on and off
     sendEvent(name: "switch", value: (device.switch == "on") ? "off" : "on")
+    // sendCommand("/button1/${(device.switch == "on") ? "off" : "on"}")
 
     //log.debug "setting command to ${evt.command}"
     sendEvent(name: "command", value: "Received: ${evt.command}")

@@ -1,5 +1,5 @@
 /**
- *  SmartThings Device Handler: CEC TV
+ *  SmartThings Device Handler: CEC Device
  *
  *  Author: kevinreedy@gmail.com
  *
@@ -13,7 +13,7 @@
  *  for the specific language governing permissions and limitations under the License.
  */
 metadata {
-  definition (name: "CEC TV", namespace: "redloro-smartthings", author: "kevinreedy@gmail.com") {
+  definition (name: "CEC Device", namespace: "redloro-smartthings", author: "kevinreedy@gmail.com") {
 
     /**
      * List our capabilties. Doing so adds predefined command(s) which
@@ -109,5 +109,5 @@ def update(evt) {
 }
 
 private sendCommand(part) {
-  parent.sendCommand("/plugins/generic${part}")
+  parent.sendCommand("/plugins/cec${part}")
 }
