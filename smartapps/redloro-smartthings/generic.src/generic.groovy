@@ -31,9 +31,9 @@ preferences {
     input "hostHub", "hub", title: "Select Hub", multiple: false, required: true
   }
   section("SmartThings Node Proxy") {
-    input "proxyAddress", "text", title: "Proxy Address", description: "(ie. 192.168.1.10)", required: true
-    input "proxyPort", "text", title: "Proxy Port", description: "(ie. 8080)", required: true, defaultValue: "8080"
-    input "authCode", "password", title: "Auth Code", description: "", required: true, defaultValue: "secret-key"
+    input "proxyAddress", "text", title: "Proxy Address", description: "(ie. 192.168.1.10)", required: true, defaultValue: "192.168.1.12"
+    input "proxyPort", "text", title: "Proxy Port", description: "(ie. 8080)", required: true, defaultValue: "7678"
+    input "authCode", "password", title: "Auth Code", description: "", required: true, defaultValue: "its-a-secret-shh-dont-tell"
   }
 }
 
