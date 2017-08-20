@@ -15,11 +15,13 @@
 var express = require('express');
 var app = express();
 var nconf = require('nconf');
+var exec = require('child_process').exec;
 var notify;
 var logger = function(str) {
   mod = 'gnrc';
   console.log("[%s] [%s] %s", new Date().toISOString(), mod, str);
 }
+function cmd_log(error, stdout, stderr) {logger(stdout)}
 
 /**
  * Routes
@@ -28,8 +30,18 @@ app.get('/', function (req, res) {
   res.status(200).json({ status: 'Generic plugin running' });
 });
 
-app.get('/button1/:cmd', function (req, res) {
-  plugin.button1(req.params.cmd);
+app.get('/power/:cmd', function (req, res) {
+  plugin.power(req.params.cmd);
+  res.end();
+});
+
+app.get('/source/:input', function (req, res) {
+  plugin.source(req.params.input);
+  res.end();
+});
+
+app.get('/media/:cmd', function (req, res) {
+  plugin.media(req.params.cmd);
   res.end();
 });
 
@@ -53,14 +65,45 @@ function Plugin() {
     return;
   };
 
-  /**
-   * Button1
-   */
-  this.button1 = function(cmd) {
+  // Power
+  this.power = function(cmd) {
     // Send command back to SmartThings Hub
     var data = {type: 'command', deviceId: '1', command: cmd};
     notify(JSON.stringify(data));
     logger(JSON.stringify(data));
+
+    if (cmd == 'on') {
+      exec('echo "on 0" | cec-client -s', cmd_log);
+    } else if (cmd == 'off') {
+      exec('echo "standby 0" | cec-client -s', cmd_log);
+    }
   };
 
+  // Source Input
+  this.source = function(input) {
+    // Send command back to SmartThings Hub
+    // var data = {type: 'command', deviceId: '1', command: input};
+    // notify(JSON.stringify(data));
+    // logger(JSON.stringify(data));
+
+    address = input.replace("hdmi", "") + "0:00"
+    logger("echo 'tx 1F:82:" + address + "' | cec-client -s");
+    exec("echo 'tx 1F:82:" + address + "' | cec-client -s", cmd_log);
+  };
+
+  // Media
+  this.media = function(cmd) {
+    // Send command back to SmartThings Hub
+    // var data = {type: 'command', deviceId: '1', command: cmd};
+    // notify(JSON.stringify(data));
+    // logger(JSON.stringify(data));
+
+    if (cmd == 'play') {
+      exec('echo "tx 14:41:24" | cec-client -s', cmd_log);
+    } else if (cmd == 'pause') {
+      exec('echo "tx 14:41:25" | cec-client -s', cmd_log);
+    } else if (cmd == 'stop') {
+      exec('echo "tx 14:42:03" | cec-client -s', cmd_log);
+    }
+  };
 }
