@@ -31,8 +31,14 @@ metadata {
      * To call a capability function, just prefix it with the name
      * of the capability, for example, refresh would be "refresh.refresh"
      */
-    command "button1"
-    command "button2"
+    command "hdmi1"
+    command "hdmi2"
+    command "hdmi3"
+    command "hdmi4"
+    command "hdmi5"
+    command "play"
+    command "pause"
+    command "stop"
   }
 
   /**
@@ -57,14 +63,34 @@ metadata {
     }
 
     // Row 1
-    standardTile("button1", "button1", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
-      state "default", action:"button1", icon:"st.Entertainment.entertainment13", backgroundColor:"#2ecc40"
+    standardTile("hdmi1", "device.hdmi1", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"hdmi1", icon:"st.Electronics.electronics6", label: "HDMI 1", backgroundColor:"#ffffff"
     }
-    standardTile("button2", "button2", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
-      state "default", action:"button2", icon:"st.Entertainment.entertainment13", backgroundColor:"#ff4136"
+    standardTile("hdmi2", "device.hdmi2", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"hdmi2", icon:"st.Electronics.electronics6", label: "HDMI 2", backgroundColor:"#ffffff"
     }
+    standardTile("hdmi3", "device.hdmi3", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"hdmi3", icon:"st.Electronics.electronics6", label: "HDMI 3", backgroundColor:"#ffffff"
+    }
+    standardTile("hdmi4", "device.hdmi4", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"hdmi4", icon:"st.Electronics.electronics6", label: "HDMI 4", backgroundColor:"#ffffff"
+    }
+    standardTile("hdmi5", "device.hdmi5", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"hdmi5", icon:"st.Electronics.electronics6", label: "HDMI 5", backgroundColor:"#ffffff"
+    }
+
     standardTile("refresh", "device.status", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
       state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh", backgroundColor:"#ffffff"
+    }
+
+    standardTile("play", "device.play", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"play", icon:"st.sonos.play-btn", backgroundColor:"#ffffff"
+    }
+    standardTile("pause", "device.pause", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"pause", icon:"st.sonos.pause-btn", backgroundColor:"#ffffff"
+    }
+    standardTile("stop", "device.stop", decoration: "flat", width: 2, height: 2, inactiveLabel: false) {
+      state "default", action:"stop", icon:"st.sonos.stop-btn", backgroundColor:"#ffffff"
     }
 
     // Defines which tile to show in the overview
@@ -73,7 +99,9 @@ metadata {
     // Defines which tile(s) to show when user opens the detailed view
     details([
       "state",
-      "button1","button2","refresh"
+      "hdmi1","hdmi2","hdmi3","hdmi4","hdmi5",
+      "refresh",
+      "play","pause","stop"
     ])
   }
 }
@@ -87,15 +115,62 @@ metadata {
  * one place.
  *
  */
-def refresh() {}
-def button1() {
-  log.debug "button1()"
-  sendCommand("/button1/on")
+
+
+def on() {
+ log.debug "on()"
+ sendCommand("/power/on")
 }
-def button2() {
-  log.debug "button2()"
-  sendCommand("/button1/off")
+
+def off() {
+ log.debug "off()"
+ sendCommand("/power/off")
 }
+
+def refresh() {
+  log.debug "refresh()"
+}
+
+def hdmi1() {
+  log.debug "hdmi1()"
+  sendCommand("/source/hdmi1")
+}
+
+def hdmi2() {
+  log.debug "hdmi2()"
+  sendCommand("/source/hdmi2")
+}
+
+def hdmi3() {
+  log.debug "hdmi3()"
+  sendCommand("/source/hdmi3")
+}
+
+def hdmi4() {
+  log.debug "hdmi4()"
+  sendCommand("/source/hdmi4")
+}
+
+def hdmi5() {
+  log.debug "hdmi5()"
+  sendCommand("/source/hdmi5")
+}
+
+def play() {
+  log.debug "play()"
+  sendCommand("/media/play")
+}
+
+def pause() {
+  log.debug "play()"
+  sendCommand("/media/pause")
+}
+
+def stop() {
+  log.debug "stop()"
+  sendCommand("/media/stop")
+}
+
 /**************************************************************************/
 
 /**
@@ -109,22 +184,12 @@ def poll() {
 def update(evt) {
   if (evt.containsKey("command")) {
     //toggle the switch on and off
-    sendEvent(name: "switch", value: (device.switch == "on") ? "off" : "on")
+    // sendEvent(name: "switch", value: (device.switch == "on") ? "off" : "on")
     // sendCommand("/button1/${(device.switch == "on") ? "off" : "on"}")
 
     //log.debug "setting command to ${evt.command}"
-    sendEvent(name: "command", value: "Received: ${evt.command}")
+    // sendEvent(name: "command", value: "Received: ${evt.command}")
   }
-}
-
-def on() {
-  log.debug "on()"
-  sendCommand("/button1/on")
-}
-
-def off() {
-  log.debug "off()"
-  sendCommand("/button1/off")
 }
 
 private sendCommand(part) {
