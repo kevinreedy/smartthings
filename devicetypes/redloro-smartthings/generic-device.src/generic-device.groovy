@@ -48,8 +48,8 @@ metadata {
   tiles(scale: 2) {
     multiAttributeTile(name:"state", type:"generic", width:6, height:4) {
       tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-        attributeState "on", label:'On', action:"switch.off", icon:"st.Electronics.electronics16", backgroundColor:"#79b821", nextState:"off"
-        attributeState "off", label:'Off', action:"switch.on", icon:"st.Electronics.electronics16", backgroundColor:"#ffffff", nextState:"on"
+        attributeState "on", label:'On', action:"switch.off", icon:"st.Entertainment.entertainment13", backgroundColor:"#79b821", nextState:"off"
+        attributeState "off", label:'Off', action:"switch.on", icon:"st.Entertainment.entertainment13", backgroundColor:"#ffffff", nextState:"on"
       }
       tileAttribute ("command", key: "SECONDARY_CONTROL") {
         attributeState "command", label:'${currentValue}'
@@ -115,6 +115,16 @@ def update(evt) {
     //log.debug "setting command to ${evt.command}"
     sendEvent(name: "command", value: "Received: ${evt.command}")
   }
+}
+
+def on() {
+  log.debug "on()"
+  sendCommand("/button1/on")
+}
+
+def off() {
+  log.debug "off()"
+  sendCommand("/button1/off")
 }
 
 private sendCommand(part) {
